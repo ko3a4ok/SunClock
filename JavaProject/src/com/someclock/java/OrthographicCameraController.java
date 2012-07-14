@@ -71,9 +71,13 @@ public class OrthographicCameraController implements ApplicationListener, Positi
     public void render() {
         Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+        camera.rotate(prevZ, 0, 0, 1);
+        camera.rotate(prevX, 1, 0, 0);
+        camera.rotate(prevY, 0, 1, 0);
+
         camera.update();
         camera.apply(Gdx.gl10);
-        // Texturing --------------------- /
+        // Texturing - -------------------- /
         Gdx.gl.glActiveTexture(GL10.GL_TEXTURE0);
         Gdx.gl.glEnable(GL10.GL_TEXTURE_2D);
         texture.bind();
@@ -82,6 +86,10 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         if (Gdx.input.justTouched())  {
             setAngle(Gdx.input.getX());
         }
+        camera.rotate(-prevY, 0, 1, 0);
+        camera.rotate(-prevX, 1, 0, 0);
+        camera.rotate(-prevZ, 0, 0, 1);
+
         if (true) return;
         if (Gdx.input.justTouched()) {
             lastTouchX = Gdx.input.getX();
@@ -125,12 +133,12 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         System.err.printf("%.2f   %.2f   %.2f\n", x, y, z);
         if (camera == null) return;
         //camera.lookAt(-(float)cos(cast(x)), -(float)cos(cast(y)), -(float)(sin(cast(x))+sin(cast(y))));
-        camera.rotate(z - prevZ, 0, 0, 1);
-        camera.rotate(x - prevX, 1, 0, 0);
-        camera.rotate(y-prevY, 0, 1, 0);
-        prevZ=z;
-        prevX=x;
-        prevY = y;
+//        camera.rotate(z - prevZ, 0, 0, 1);
+//        camera.rotate(x - prevX, 1, 0, 0);
+//        camera.rotate(y-prevY, 0, 1, 0);
+        prevZ=-z-360;
+        prevX=-x-360;
+        prevY = -y-360;
     }
 
     float prevZ;
