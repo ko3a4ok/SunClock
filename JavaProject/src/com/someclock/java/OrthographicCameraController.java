@@ -17,8 +17,8 @@ import static java.lang.Math.*;
  */
 public class OrthographicCameraController implements ApplicationListener, PositionDataInterface {
 
-    static final int WIDTH  = 300;
-    static final int HEIGHT = 300;
+    static final int WIDTH  = 50;
+    static final int HEIGHT = 50;
 
     private OrthographicCamera camera;
     private Texture texture;
