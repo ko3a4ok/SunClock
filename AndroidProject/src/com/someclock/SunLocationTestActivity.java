@@ -1,6 +1,7 @@
 package com.someclock;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -17,12 +18,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 
+import com.mhuss.AstroLib.Astro;
+import com.mhuss.AstroLib.DarkCalCalc;
+import com.mhuss.AstroLib.DarkCalInput;
 import com.mhuss.AstroLib.DateOps;
 import com.mhuss.AstroLib.Latitude;
 import com.mhuss.AstroLib.Longitude;
 import com.mhuss.AstroLib.ObsInfo;
 import com.mhuss.AstroLib.PlanetData;
 import com.mhuss.AstroLib.Planets;
+import com.mhuss.AstroLib.RiseSet;
+import com.mhuss.AstroLib.TimeOps;
+import com.mhuss.AstroLib.TimePair;
 
 public class SunLocationTestActivity extends Activity {
 
@@ -84,7 +91,35 @@ public class SunLocationTestActivity extends Activity {
 		msg.append("\n" + "SUN Alg altitude: " + position.getAltitude());
 		msg.append("\n" + "SUN Alg azimuth: " + position.getAzimuth());
 
+		DarkCalInput dci = new DarkCalInput(month, year, location.getLongitude(), location.getLatitude(), TimeOps.tzOffset(calendar));
+		DarkCalCalc dark = new DarkCalCalc(dci, true);
+
+		PlanetData pd = new PlanetData(Planets.SUN, jd, oi);
+		TimePair times = RiseSet.getTimes(Planets.SUN, jd, oi, pd);
+		Date rise = toLocalTime(formatTime(times.a));
+		Date set = toLocalTime(formatTime(times.b));
+		// msg.append("\nOffset: " + calendar.getTimeZone().getRawOffset());
+		msg.append("\nRise: " + rise);
+		msg.append("\nSet: " + set);
+
 		text.setText(msg.toString());
+		Log.d(TAG, msg.toString());
+	}
+
+	private Date toLocalTime(Date date) {
+		Calendar utc = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+		Calendar cur = new GregorianCalendar();
+		
+		Log.d(TAG, utc.toString());
+		Log.d(TAG, cur.toString());
+//		return date;
+		int year = cur.get(Calendar.YEAR);  
+		int month = cur.get(Calendar.MONTH);
+		int day = cur.get(Calendar.DATE);
+		int hour = date.getHours() + (utc.get(Calendar.HOUR) - cur.get(Calendar.HOUR));
+		int minute = date.getYear() + (utc.get(Calendar.MINUTE) - cur.get(Calendar.MINUTE));
+		Date out = new Date(year, month, day, hour, minute);
+		return out;
 	}
 
 	LocationListener locationListener = new LocationListener() {
@@ -103,4 +138,36 @@ public class SunLocationTestActivity extends Activity {
 		public void onProviderDisabled(String provider) {
 		}
 	};
+
+	/**
+	 * Format a time as a <TT>String</TT> using the format <TT>HH:MM</TT>. <BR>
+	 * The returned string will be "--:--" if the time is INVALID.
+	 * 
+	 * @param t
+	 *            The time to format in days
+	 * 
+	 * @return The formatted String
+	 */
+	public static Date formatTime(double t) {
+		// String ft = "--:--";
+		Date out = null;
+
+		if (t >= 0D) {
+			// round up to nearest minute
+			int minutes = (int) (t * Astro.HOURS_PER_DAY * Astro.MINUTES_PER_HOUR + Astro.ROUND_UP);
+			// ft = twoDigits(minutes / Astro.IMINUTES_PER_HOUR) + ":" +
+			// twoDigits(minutes % Astro.IMINUTES_PER_HOUR);
+			out = new Date(0, 0, 0, minutes / Astro.IMINUTES_PER_HOUR, minutes % Astro.IMINUTES_PER_HOUR);
+		}
+
+		return out;
+	}
+
+	// -------------------------------------------------------------------------
+	// returns String version of two digit number, with leading zero if needed
+	// The input is expected to be in the range 0 to 99
+	//
+	private static String twoDigits(int i) {
+		return (i > 9) ? "" + i : "0" + i;
+	}
 }
