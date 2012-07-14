@@ -1,5 +1,7 @@
 package com.someclock.java;
 
+import com.badlogic.gdx.backends.jogl.JoglApplication;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ko3a4ok
@@ -10,5 +12,9 @@ package com.someclock.java;
 public class Main {
     public String getSome(int i) {
         return "result is " + i;
+    }
+
+    public static void main (String[] args) {
+        new JoglApplication(new MyFirstTriangle(), "Game", 480, 320, false);
     }
 }
