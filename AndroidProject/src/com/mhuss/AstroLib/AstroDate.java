@@ -100,7 +100,7 @@ public class AstroDate {
 
     // The conversion formulas and magic numbers are from Meeus,
     // Chapter 7.
-    jd = jd +0.5;                    // Einfügung Strickling
+    jd = jd +0.5;                    // Einfgung Strickling
     double Z = Math.floor(jd);
     double F = jd - Z;
     double A = Z;

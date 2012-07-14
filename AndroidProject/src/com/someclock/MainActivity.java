@@ -20,39 +20,36 @@ public class MainActivity extends AndroidApplication implements SensorEventListe
         super.onCreate(savedInstanceState);
         cameraController = new OrthographicCameraController();
         initialize(cameraController, false);
-
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager =(SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this,
-                sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
+                sensorManager.getDefaultSensor(type),
                 SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private SensorManager sensorManager;
     @Override
     public void onSensorChanged(SensorEvent event) {
-         if (!event.sensor.getName().equals("BMA220")) return;
         float[] values = event.values;
 
         // Movement
         float x = values[0];
         float y = values[1];
         float z = values[2];
-        System.err.println(event.sensor.getName() + " " + Arrays.toString(values));
-        cameraController.setAngle(x/10.0f);
+        cameraController.setChord(y, z, x);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
-
+    int type = Sensor.TYPE_ORIENTATION;
     @Override
     protected void onResume() {
         super.onResume();
         // register this class as a listener for the orientation and
         // accelerometer sensors
         sensorManager.registerListener(this,
-                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                sensorManager.getDefaultSensor(type),
                 SensorManager.SENSOR_DELAY_NORMAL);
     }
 

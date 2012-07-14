@@ -3,9 +3,11 @@ package com.someclock.java;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader;
 import com.badlogic.gdx.math.Rectangle;
-
+import static java.lang.Math.*;
 /**
  * Created with IntelliJ IDEA.
  * User: ko3a4ok
@@ -18,11 +20,14 @@ public class OrthographicCameraController implements ApplicationListener, Positi
     static final int WIDTH  = 300;
     static final int HEIGHT = 300;
 
-    private OrthographicCamera cam;
+    private OrthographicCamera camera;
     private Texture texture;
     private Mesh mesh;
     private Rectangle glViewport;
     private float                           rotationSpeed;
+
+    Mesh model;
+
 
     @Override
     public void create() {
@@ -42,12 +47,55 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         });
         mesh.setIndices(new short[] { 0, 1, 2});
 
-        cam = new OrthographicCamera(WIDTH, HEIGHT);
-        cam.zoom  = 1f;
-        //cam.position.set(WIDTH / 2, HEIGHT / 2, 0);
+        camera = new OrthographicCamera(WIDTH, HEIGHT);
+        camera.zoom  = .3f;
+        //camera.position.set(WIDTH / 2, HEIGHT / 2, 0);
         glViewport = new Rectangle(0, 0, WIDTH, HEIGHT);
 
+        for (FileHandle fh: Gdx.files.internal("./").list())
+            System.err.println(fh.name());
+        model = ObjLoader.loadObj(Gdx.files.internal("sun_clock.obj").read(), true);
+        Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
+        Gdx.gl10.glTranslatef(0.0f,0.0f,-3.0f);
+
     }
+
+    protected int lastTouchX;
+    protected int lastTouchY;
+    protected float rotateZ=0.01f;
+    protected float increment=0.01f;
+
+    @Override
+    public void render() {
+        Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+        camera.update();
+        camera.apply(Gdx.gl10);
+        model.render(GL10.GL_TRIANGLES);
+
+        if (true) return;
+        if (Gdx.input.justTouched()) {
+            lastTouchX = Gdx.input.getX();
+            lastTouchY = Gdx.input.getY();
+        } else if (Gdx.input.isTouched()) {
+            camera.rotate(0.2f * (lastTouchX - Gdx.input.getX()), 0, 1.0f, 0);
+            camera.rotate(0.2f * (lastTouchY - Gdx.input.getY()), 1.0f, 0, 0);
+
+            lastTouchX = Gdx.input.getX();
+            lastTouchY = Gdx.input.getY();
+        }
+        rotateZ+=increment;
+    }
+//
+//    @Override
+//    public void resize(int arg0, int arg1) {
+//        float aspectRatio = (float) arg0 / (float) arg1;
+//        camera = new PerspectiveCamera(67, 2f * aspectRatio, 2f);
+//        camera.near=0.1f;
+//        camera.translate(0, 0, 0);
+//    }
+
+
 
 
     private float angle = Float.MAX_VALUE;
@@ -63,14 +111,24 @@ public class OrthographicCameraController implements ApplicationListener, Positi
     }
 
     @Override
-    public void render() {
+    public void setChord(float x, float y, float z) {
+        System.err.printf("%.2f   %.2f   %.2f\n", x, y, z);
+        if (camera != null)
+        camera.lookAt(-(float)cos(cast(x)), -(float)cos(cast(y)), -(float)(sin(cast(x))+sin(cast(y))));
+    }
+
+    double cast(float a) {
+        return a*Math.PI/180.;
+    }
+    //    @Override
+    public void render2() {
         handleInput();
-        //cam.rotate(angle, 0, 1, 0);
+        //camera.rotate(angle, 0, 1, 0);
         if (angle != Float.MAX_VALUE)
-            cam.direction.set((float) Math.sqrt(1-angle*angle), 0f, angle);
+            camera.direction.set((float) Math.sqrt(1-angle*angle), 0f, angle);
         else
-            cam.direction.set((float)(Math.sin(al)),0f, -(float) Math.cos(al));
-        System.err.println(cam.direction + " | " + cam.position  + " " + cam.zoom);
+            camera.direction.set((float)(Math.sin(al)),0f, -(float) Math.cos(al));
+        System.err.println(camera.direction + " | " + camera.position + " " + camera.zoom);
 
 
         GL10 gl = Gdx.graphics.getGL10();
@@ -79,8 +137,8 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         gl.glViewport((int) glViewport.x, (int) glViewport.y,
                 (int) glViewport.width, (int) glViewport.height);
 
-        cam.update();
-        cam.apply(gl);
+        camera.update();
+        camera.apply(gl);
 
 //        // Texturing --------------------- /
 //        gl.glActiveTexture(GL10.GL_TEXTURE0);
@@ -93,48 +151,48 @@ public class OrthographicCameraController implements ApplicationListener, Positi
 
     private void handleInput() {
         if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-            cam.zoom += 0.02;
+            camera.zoom += 0.02;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
-            cam.zoom -= 0.02;
+            camera.zoom -= 0.02;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            if (cam.position.x > 0)
-                cam.translate(-3, 0, 0);
+            if (camera.position.x > 0)
+                camera.translate(-3, 0, 0);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            if (cam.position.x < 1024)
-                cam.translate(3, 0, 0);
+            if (camera.position.x < 1024)
+                camera.translate(3, 0, 0);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            if (cam.position.y > 0)
-                cam.translate(0, -3, 0);
+            if (camera.position.y > 0)
+                camera.translate(0, -3, 0);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            if (cam.position.y < 1024)
-                cam.translate(0, 3, 0);
+            if (camera.position.y < 1024)
+                camera.translate(0, 3, 0);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-            cam.rotate(-rotationSpeed, 0, 0, 1);
+            camera.rotate(-rotationSpeed, 0, 0, 1);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.E)) {
-            cam.rotate(rotationSpeed, 0, 0, 1);
+            camera.rotate(rotationSpeed, 0, 0, 1);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-            //cam.rotate(rotationSpeed, 0, 1, 0);
+            //camera.rotate(rotationSpeed, 0, 1, 0);
             al += .01f;
 
         }
         if (Gdx.input.isKeyPressed(Input.Keys.BACKSPACE)){
-//            cam.rotate(-rotationSpeed, 0, 1, 0);
+//            camera.rotate(-rotationSpeed, 0, 1, 0);
             al -= .01f;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.O)){
-            cam.position.z -= 3;
+            camera.position.z -= 3;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.P)){
-            cam.position.z += 3;
+            camera.position.z += 3;
         }
 
     }
