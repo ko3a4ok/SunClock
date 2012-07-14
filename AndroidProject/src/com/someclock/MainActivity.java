@@ -36,6 +36,7 @@ public class MainActivity extends AndroidApplication implements SensorEventListe
         float y = values[1];
         float z = values[2];
         cameraController.setChord(y, z, x);
+        //cameraController.setAngle(x);
     }
 
     @Override

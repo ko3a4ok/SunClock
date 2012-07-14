@@ -73,6 +73,9 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         camera.apply(Gdx.gl10);
         model.render(GL10.GL_TRIANGLES);
 
+        if (Gdx.input.justTouched())  {
+            setAngle(Gdx.input.getX());
+        }
         if (true) return;
         if (Gdx.input.justTouched()) {
             lastTouchX = Gdx.input.getX();
@@ -101,9 +104,10 @@ public class OrthographicCameraController implements ApplicationListener, Positi
     private float angle = Float.MAX_VALUE;
 
     public void setAngle(float a) {
-        angle = a;
-
+        camera.rotate(a-prevZ);
+        prevZ = a;
     }
+
 
     @Override
     public void setAsimut(float a) {
@@ -113,9 +117,19 @@ public class OrthographicCameraController implements ApplicationListener, Positi
     @Override
     public void setChord(float x, float y, float z) {
         System.err.printf("%.2f   %.2f   %.2f\n", x, y, z);
-        if (camera != null)
-        camera.lookAt(-(float)cos(cast(x)), -(float)cos(cast(y)), -(float)(sin(cast(x))+sin(cast(y))));
+        if (camera == null) return;
+        //camera.lookAt(-(float)cos(cast(x)), -(float)cos(cast(y)), -(float)(sin(cast(x))+sin(cast(y))));
+        camera.rotate(z-prevZ, 0, 0, 1);
+        camera.rotate(x-prevX, 1, 0, 0);
+        camera.rotate(y-prevY, 0, 1, 0);
+        prevZ=z;
+        prevX=x;
+        prevY = y;
     }
+
+    float prevZ;
+    float prevX;
+    float prevY;
 
     double cast(float a) {
         return a*Math.PI/180.;
