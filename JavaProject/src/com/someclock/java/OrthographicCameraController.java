@@ -35,6 +35,7 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         mesh = new Mesh(true, 4, 6,
                 new VertexAttribute(VertexAttributes.Usage.Position, 3,"attr_Position"),
                 new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "attr_texCoords"));
+
         System.err.println("LOCAL path: " + Gdx.files.getExternalStoragePath());
 //        texture = new Texture(Gdx.files.external("sc_map.png"));
         float max = 100;
@@ -55,6 +56,7 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         for (FileHandle fh: Gdx.files.internal("./").list())
             System.err.println(fh.name());
         model = ObjLoader.loadObj(Gdx.files.internal("sun_clock.obj").read(), true);
+        texture = new Texture(Gdx.files.internal("1853.jpg"));
         Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
         Gdx.gl10.glTranslatef(0.0f,0.0f,-3.0f);
 
@@ -71,6 +73,10 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         camera.update();
         camera.apply(Gdx.gl10);
+        // Texturing --------------------- /
+        Gdx.gl.glActiveTexture(GL10.GL_TEXTURE0);
+        Gdx.gl.glEnable(GL10.GL_TEXTURE_2D);
+        texture.bind();
         model.render(GL10.GL_TRIANGLES);
 
         if (Gdx.input.justTouched())  {
@@ -119,8 +125,8 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         System.err.printf("%.2f   %.2f   %.2f\n", x, y, z);
         if (camera == null) return;
         //camera.lookAt(-(float)cos(cast(x)), -(float)cos(cast(y)), -(float)(sin(cast(x))+sin(cast(y))));
-        camera.rotate(z-prevZ, 0, 0, 1);
-        camera.rotate(x-prevX, 1, 0, 0);
+        camera.rotate(z - prevZ, 0, 0, 1);
+        camera.rotate(x - prevX, 1, 0, 0);
         camera.rotate(y-prevY, 0, 1, 0);
         prevZ=z;
         prevX=x;
