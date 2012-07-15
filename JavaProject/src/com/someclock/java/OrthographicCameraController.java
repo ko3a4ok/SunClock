@@ -50,16 +50,14 @@ public class OrthographicCameraController implements ApplicationListener, Positi
 
         camera = new OrthographicCamera(WIDTH, HEIGHT);
         camera.zoom  = .3f;
-        //camera.position.set(WIDTH / 2, HEIGHT / 2, 0);
-        glViewport = new Rectangle(0, 0, WIDTH, HEIGHT);
+        camera.position.set(0,0f,-1f);
+        glViewport = new Rectangle( -WIDTH, -HEIGHT, 2*WIDTH, 2*HEIGHT);
 
         for (FileHandle fh: Gdx.files.internal("./").list())
             System.err.println(fh.name());
         model = ObjLoader.loadObj(Gdx.files.internal("sun_clock.obj").read(), true);
         texture = new Texture(Gdx.files.internal("1853.jpg"));
         Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
-        Gdx.gl10.glTranslatef(0.0f,0.0f,-3.0f);
-
     }
 
     protected int lastTouchX;
@@ -71,6 +69,7 @@ public class OrthographicCameraController implements ApplicationListener, Positi
     public void render() {
         Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+//        Gdx.gl.glViewport(0,0,50,50);
         camera.rotate(prevZ, 0, 0, 1);
         camera.rotate(prevX, 1, 0, 0);
         camera.rotate(prevY, 0, 1, 0);
@@ -136,9 +135,9 @@ public class OrthographicCameraController implements ApplicationListener, Positi
 //        camera.rotate(z - prevZ, 0, 0, 1);
 //        camera.rotate(x - prevX, 1, 0, 0);
 //        camera.rotate(y-prevY, 0, 1, 0);
-        prevZ=-z-360;
-        prevX=-x-360;
-        prevY = -y-360;
+        prevZ=-z;
+        prevX=-x;
+        prevY = y;
     }
 
     float prevZ;
