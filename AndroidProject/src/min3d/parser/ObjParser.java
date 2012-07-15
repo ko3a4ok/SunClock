@@ -56,8 +56,10 @@ public class ObjParser extends AParser implements IParser {
 	public void parse() {
 		long startTime = Calendar.getInstance().getTimeInMillis();
 
+//		InputStream fileIn = resources.openRawResource(resources.getIdentifier(
+//				resourceID, null, null));
 		InputStream fileIn = resources.openRawResource(resources.getIdentifier(
-				resourceID, null, null));
+				resourceName, resourceType, packageID));
 		BufferedReader buffer = new BufferedReader(
 				new InputStreamReader(fileIn));
 		String line;
@@ -172,8 +174,17 @@ public class ObjParser extends AParser implements IParser {
 		resourceID.append(":raw/");
 		resourceID.append(libIDSbuf.toString());
 
+		String resID = resourceID.toString();
+		String packID = resID.split(":")[0];
+		String typeAndName = resID.split(":")[1];
+		String resType = typeAndName.split("/")[0];
+		String resName = typeAndName.split("/")[1];
+			
+		
+//		InputStream fileIn = resources.openRawResource(resources.getIdentifier(
+//				resourceID.toString(), null, null));
 		InputStream fileIn = resources.openRawResource(resources.getIdentifier(
-				resourceID.toString(), null, null));
+				resName, resType, packID));
 		BufferedReader buffer = new BufferedReader(
 				new InputStreamReader(fileIn));
 		String line;

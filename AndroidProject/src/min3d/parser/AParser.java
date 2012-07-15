@@ -42,6 +42,8 @@ public abstract class AParser implements IParser {
 	protected ArrayList<Number3d> normals;
 	protected boolean generateMipMap;
 	protected HashMap<String, Material> materialMap;
+	protected String resourceType;
+	protected String resourceName;
 	
 	public AParser()
 	{
@@ -59,8 +61,14 @@ public abstract class AParser implements IParser {
 		this();
 		this.resources = resources;
 		this.resourceID = resourceID;
-		if (resourceID.indexOf(":") > -1)
+		if (resourceID.indexOf(":") > -1){
 			this.packageID = resourceID.split(":")[0];
+			String typeAndName = resourceID.split(":")[1];
+			this.resourceType = typeAndName.split("/")[0];
+			this.resourceName = typeAndName.split("/")[1];
+			
+		}
+		
 		this.generateMipMap = generateMipMap;
 	}
 	

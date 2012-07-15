@@ -72,7 +72,7 @@ public class Scene implements IObject3dContainer, IDirtyParent
 
 		_camera = new CameraVo();
 		
-		_backgroundColor = new Color4Managed(0,0,0,255, this);
+		_backgroundColor = new Color4Managed(255,255,255,255, this);
 		
 		_lights = new ManagedLightList();
 		

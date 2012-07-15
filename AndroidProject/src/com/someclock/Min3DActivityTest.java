@@ -85,10 +85,16 @@ public class Min3DActivityTest extends RendererActivity implements SensorEventLi
 		scene.camera().position.x = mAccVals.x * .2f;
         scene.camera().position.y = mAccVals.y * .2f;
         scene.camera().position.z = mAccVals.z * .2f;
+		
+//		scene.camera().position.x = event.values[1]+5;
+//        scene.camera().position.y = event.values[2]+5;
+//        scene.camera().position.z = event.values[0]+5;
 
         scene.camera().target.x = -scene.camera().position.x;
         scene.camera().target.y = -scene.camera().position.y;
         scene.camera().target.z = -scene.camera().position.z;
+		
+		
 	}
 
 	@Override
