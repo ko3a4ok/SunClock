@@ -67,7 +67,7 @@ public class OrthographicCameraController implements ApplicationListener, Positi
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        Gdx.gl.glClearColor(.5f, 0f, 0f, .3f);
         Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 //        Gdx.gl.glViewport(0,0,50,50);
         camera.rotate(prevZ, 0, 0, 1);

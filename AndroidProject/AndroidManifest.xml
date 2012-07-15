@@ -9,26 +9,36 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application android:label="@string/app_name" >
+        <service android:label="WaalllPapper"
+                 android:name="com.someclock.ClockWallpaper"
+                 android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data android:name="android.service.wallpaper"
+                       android:resource="@xml/wallpaper" />
+        </service>
+
         <activity
             android:name="MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.intent.action.MAIN" /> -->
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
 
-<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
-<!--             </intent-filter> -->
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
         </activity>
-        <activity
-            android:name=".Min3DActivityTest"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_min3_dactivity_test" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <!--<activity-->
+            <!--android:name=".Min3DActivityTest"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:label="@string/title_activity_min3_dactivity_test" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
     </application>
 
 </manifest>
