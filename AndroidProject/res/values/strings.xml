@@ -5,5 +5,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_sun_location_test">SunLocationTestActivity</string>
+    <string name="title_activity_min3_dactivity_test">Min3DActivityTest</string>
 
 </resources>

@@ -30,7 +30,8 @@ public class MainActivity extends AndroidApplication implements SensorEventListe
     @Override
     public void onSensorChanged(SensorEvent event) {
         float[] values = event.values;
-
+        
+        
         // Movement
         float x = values[0];
         float y = values[1];
