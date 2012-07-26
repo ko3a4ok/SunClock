@@ -8,7 +8,5 @@ package com.someclock.java;
  * To change this template use File | Settings | File Templates.
  */
 public interface PositionDataInterface {
-    public void setAngle(float a);
-    public void setAsimut(float a);
     void setChord(float x, float y, float z);
 }

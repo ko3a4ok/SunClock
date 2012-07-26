@@ -15,6 +15,6 @@ public class Main {
     }
 
     public static void main (String[] args) {
-        new JoglApplication(new OrthographicCameraController(), "Game", 480, 320, false);
+        new JoglApplication(new MyCube(), "Game", 480, 320, false);
     }
 }

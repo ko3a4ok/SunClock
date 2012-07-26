@@ -35,9 +35,9 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         mesh = new Mesh(true, 4, 6,
                 new VertexAttribute(VertexAttributes.Usage.Position, 3,"attr_Position"),
                 new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "attr_texCoords"));
-
         System.err.println("LOCAL path: " + Gdx.files.getExternalStoragePath());
 //        texture = new Texture(Gdx.files.external("sc_map.png"));
+
         float max = 100;
         float z = 0;
         mesh.setVertices(new float[] {
@@ -70,9 +70,9 @@ public class OrthographicCameraController implements ApplicationListener, Positi
         Gdx.gl.glClearColor(.5f, 0f, 0f, .3f);
         Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 //        Gdx.gl.glViewport(0,0,50,50);
-        camera.rotate(prevZ, 0, 0, 1);
-        camera.rotate(prevX, 1, 0, 0);
-        camera.rotate(prevY, 0, 1, 0);
+//        camera.rotate(prevZ, 0, 0, 1);
+//        camera.rotate(prevX, 1, 0, 0);
+//        camera.rotate(prevY, 0, 1, 0);
 
         camera.update();
         camera.apply(Gdx.gl10);
@@ -122,10 +122,6 @@ public class OrthographicCameraController implements ApplicationListener, Positi
     }
 
 
-    @Override
-    public void setAsimut(float a) {
-
-    }
 
     @Override
     public void setChord(float x, float y, float z) {
@@ -135,9 +131,9 @@ public class OrthographicCameraController implements ApplicationListener, Positi
 //        camera.rotate(z - prevZ, 0, 0, 1);
 //        camera.rotate(x - prevX, 1, 0, 0);
 //        camera.rotate(y-prevY, 0, 1, 0);
-        prevZ=-z;
-        prevX=-x;
-        prevY = y;
+        prevZ=z;
+        prevX=x;
+        prevY= y;
     }
 
     float prevZ;
